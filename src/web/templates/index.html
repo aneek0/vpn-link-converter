@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPN Link Converter - Конвертер в sing-box</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .radio-option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .radio-option label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .result h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .result textarea {
+            background: #fff;
+            min-height: 300px;
+        }
+        
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #c33;
+        }
+        
+        .success {
+            background: #efe;
+            color: #3c3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #3c3;
+        }
+        
+        .copy-btn {
+            margin-top: 10px;
+            background: #28a745;
+            width: auto;
+            padding: 8px 20px;
+            font-size: 14px;
+        }
+        
+        .copy-btn:hover {
+            background: #218838;
+        }
+        
+        .protocols {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .protocols strong {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 VPN Link Converter</h1>
+        <p class="subtitle">Конвертация VPN ссылок в конфигурации sing-box</p>
+        
+        <form method="POST" action="/convert">
+            <div class="form-group">
+                <label for="url">VPN ссылка или подписка:</label>
+                <textarea 
+                    id="url" 
+                    name="url" 
+                    placeholder="Вставьте ссылку VPN (hy2://, vless://, vmess:// и т.д.) или ссылку на подписку (http/https)"
+                    required
+                >{% if url %}{{ url }}{% endif %}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Формат конфигурации:</label>
+                <div class="radio-group">
+                    {% if subscription_links %}
+                    <!-- Форматы для подписок -->
+                    <div class="radio-option">
+                        <input 
+                            type="radio" 
+                            id="text" 
+                            name="format_type" 
+                            value="text"
+                            {% if format_type == "text" %}checked{% endif %}
+                        >
+                        <label for="text">📝 Текстовый файл</label>
+                    </div>
+                    <div class="radio-option">
+                        <input 
+                            type="radio" 
+                            id="clash" 
+                            name="format_type" 
+                            value="clash"
+                            {% if format_type == "clash" %}checked{% endif %}
+                        >
+                        <label for="clash">⚡ Clash YAML</label>
+                    </div>
+                    <div class="radio-option">
+                        <input 
+                            type="radio" 
+                            id="singbox" 
+                            name="format_type" 
+                            value="singbox"
+                            {% if format_type == "singbox" %}checked{% endif %}
+                        >
+                        <label for="singbox">📦 sing-box JSON</label>
+                    </div>
+                    <div class="radio-option">
+                        <input 
+                            type="radio" 
+                            id="xray" 
+                            name="format_type" 
+                            value="xray"
+                            {% if format_type == "xray" %}checked{% endif %}
+                        >
+                        <label for="xray">🚀 Xray Core</label>
+                    </div>
+                    {% else %}
+                    <!-- Форматы для одиночных ссылок -->
+                    <div class="radio-option">
+                        <input 
+                            type="radio" 
+                            id="outbound" 
+                            name="format_type" 
+                            value="outbound"
+                            {% if format_type != "full" and format_type != "clash" %}checked{% endif %}
+                        >
+                        <label for="outbound">📦 Только outbound</label>
+                    </div>
+                    <div class="radio-option">
+                        <input 
+                            type="radio" 
+                            id="full" 
+                            name="format_type" 
+                            value="full"
+                            {% if format_type == "full" %}checked{% endif %}
+                        >
+                        <label for="full">📄 Полная конфигурация</label>
+                    </div>
+                    <div class="radio-option">
+                        <input 
+                            type="radio" 
+                            id="clash" 
+                            name="format_type" 
+                            value="clash"
+                            {% if format_type == "clash" %}checked{% endif %}
+                        >
+                        <label for="clash">⚡ Clash YAML</label>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <button type="submit">Конвертировать</button>
+        </form>
+        
+        {% if error %}
+        <div class="error">
+            <strong>Ошибка:</strong> {{ error }}
+        </div>
+        {% endif %}
+        
+        {% if success and subscription_links %}
+        <div class="result show">
+            <h2>✅ Извлечено {{ links_count }} VPN ссылок из подписки:</h2>
+            <div style="max-height: 400px; overflow-y: auto; background: #fff; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                {% for link in subscription_links %}
+                <div style="margin-bottom: 10px; padding: 10px; background: #f9f9f9; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 12px; word-break: break-all;">
+                    {{ link }}
+                </div>
+                {% endfor %}
+            </div>
+            <p style="margin-top: 15px; color: #666;">
+                Выберите формат экспорта выше и нажмите "Конвертировать".
+            </p>
+        </div>
+        {% endif %}
+        
+        {% if success and config %}
+        <div class="result show">
+            <h2>✅ Результат конвертации:</h2>
+            <textarea id="result" readonly>{{ config }}</textarea>
+            <button class="copy-btn" onclick="copyToClipboard()">📋 Копировать</button>
+            {% if config_format == "yaml" %}
+            <p style="margin-top: 10px; color: #666; font-size: 0.9em;">
+                Формат: Clash YAML{% if links_count %} ({{ links_count }} серверов){% endif %}
+            </p>
+            {% elif config_format == "text" %}
+            <p style="margin-top: 10px; color: #666; font-size: 0.9em;">
+                Формат: Текстовый файл ({{ links_count }} ссылок)
+            </p>
+            {% elif format_type == "xray" %}
+            <p style="margin-top: 10px; color: #666; font-size: 0.9em;">
+                Формат: Xray Core JSON{% if links_count %} ({{ links_count }} серверов){% endif %}
+            </p>
+            {% elif format_type == "singbox" %}
+            <p style="margin-top: 10px; color: #666; font-size: 0.9em;">
+                Формат: sing-box JSON (полная конфигурация{% if links_count %}, {{ links_count }} серверов{% endif %})
+            </p>
+            {% else %}
+            <p style="margin-top: 10px; color: #666; font-size: 0.9em;">
+                Формат: sing-box JSON ({% if format_type == "full" %}полная конфигурация{% else %}только outbound{% endif %})
+            </p>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <div class="protocols">
+            <strong>Поддерживаемые протоколы:</strong><br>
+            Hysteria2 (hy2://), VLESS (vless://), VMess (vmess://), Trojan (trojan://),
+            Shadowsocks (ss://), SOCKS5 (socks5://), HTTP/HTTPS (http://, https://),
+            Wireguard (wg://), TUIC (tuic://), Hysteria (hysteria://)<br><br>
+            <strong>Подписки:</strong><br>
+            Поддерживается парсинг подписок: ссылки на подписки (http/https), base64 закодированные подписки, текст с несколькими VPN ссылками
+        </div>
+    </div>
+    
+    <script>
+        function copyToClipboard() {
+            const textarea = document.getElementById('result');
+            textarea.select();
+            document.execCommand('copy');
+            
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = '✓ Скопировано!';
+            btn.style.background = '#28a745';
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '#28a745';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
+

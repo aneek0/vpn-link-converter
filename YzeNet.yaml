@@ -1,0 +1,758 @@
+port: 7890
+socks-port: 7891
+mixed-port: 7893
+allow-lan: false
+external-controller: 127.0.0.1:9090
+
+unified-delay: true
+tcp-concurrent: true
+find-process: true
+# кто спиздит внаглую тот уебан
+# t.me/ytility
+sniffing:
+  enabled: true
+  ports:
+    - 443
+    - 80
+  sniff:
+    - http
+    - tls
+    - quic
+
+tun:
+  enable: true
+  stack: mixed
+  auto-route: true
+  dns-hijack:
+    - '198.18.0.2:53'
+  auto-detect-interface: true
+  strict-route: true
+  full-nameservers-route: true
+
+dns:
+  enable: true
+  ipv6: false
+  listen: 0.0.0.0:53
+  use-hosts: true
+  
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  
+  strategy: prefer-ipv4
+  nameserver:
+    - https://1.1.1.1/dns-query
+    - tls://8.8.8.8:853
+  
+  default-nameserver:
+    - 8.8.4.4
+    - 208.67.222.222
+  
+  fake-ip-filter:
+    - +.stun.*
+    - +.pool.ntp.org
+    - +.msftncsi.com
+    - 'local'
+    - '*.lan'
+
+proxies:
+  - name: "🌀 Автоподбор 1"
+    type: vless
+    server: univovh.iskra-connect.xyz
+    port: 443
+    uuid: 244812cb-d141-4b92-b019-e59636fd2afb
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: powodzenia.xyz
+    reality-opts:
+      public-key: _u-6IhXt7uYnQJmgM-kK40q8zZrwZg-CFp31MWzhJTA
+      short-id: 57fa862a5eaf5fef
+  - name: "🇺🇸 Америка 1"
+    type: vless
+    server: us.iskra-connect.xyz
+    port: 443
+    uuid: 244812cb-d141-4b92-b019-e59636fd2afb
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: deepl.com
+    reality-opts:
+      public-key: Lr-OMsmd_iR4LIq09qxFjyOKiOON8fwDa8MYJr670wI
+      short-id: cbd4dd08350fe4bf
+  - name: "🇺🇸 Америка 2"
+    type: vless
+    server: us.iskra-connect.xyz
+    port: 443
+    uuid: 244812cb-d141-4b92-b019-e59636fd2afb
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: deepl.com
+    reality-opts:
+      public-key: Lr-OMsmd_iR4LIq09qxFjyOKiOON8fwDa8MYJr670wI
+      short-id: cbd4dd08350fe4bf
+  - name: "🇺🇸 Америка 3"
+    type: vless
+    server: 74.208.192.17
+    port: 443
+    uuid: 5ca71302-7529-435f-b7b9-925dd0412b5f
+    network: tcp
+    tls: true
+    udp: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: azure.com
+    reality-opts:
+      public-key: ckRcueERkPqqjZABwxqni_J_Nbb70Q6k5fEEUAjoImw
+      fingerprint: chrome
+  - name: "🇳🇱 Амстердам 1"
+    type: vless
+    server: 5i0oxpfv.tree-top.cc
+    port: 443
+    uuid: 793099c5-0712-4ea0-bbe1-455da88fc671
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: www.apple.com
+    reality-opts:
+      public-key: fPSR5GZpxhOV6Rh7VzMtS4AeRN7ipyNX4waG9JzJzxQ
+      short-id: 21181028b56c8702
+  - name: "🇳🇱 Амстердам 2"
+    type: vless
+    server: a.nl.cdn.maviks.ru
+    port: 443
+    uuid: 793099c5-0712-4ea0-bbe1-455da88fc671
+    tls: true
+    network: httpupgrade
+    servername: cdn-nl.maviks.ru
+    http-opts:
+      path: ["/MaGLM25tSikPTFr75Q0Yri?ed=2560"]
+      headers:
+        Host: ["cdn-nl.maviks.ru"]
+  - name: "🛡️ Антиблок 1"
+    type: vless
+    server: 94.143.231.62
+    port: 443
+    uuid: 244812cb-d141-4b92-b019-e59636fd2afb
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: hello.opengate.tech
+    reality-opts:
+      public-key: pJZdgXS61oBi-VKn1QQ59cJTLn3pRNUryhKGWw2q6gM
+      short-id: 37cc8cff6df6108c
+  - name: "🛡️ Антиблок 2"
+    type: vless
+    server: 94.143.231.62
+    port: 443
+    uuid: 244812cb-d141-4b92-b019-e59636fd2afb
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: hello.opengate.tech
+    reality-opts:
+      public-key: pJZdgXS61oBi-VKn1QQ59cJTLn3pRNUryhKGWw2q6gM
+      short-id: 37cc8cff6df6108c
+  - name: "🇩🇪 Германия 1"
+    type: vless
+    server: a.de.maviks.ru
+    port: 443
+    uuid: 793099c5-0712-4ea0-bbe1-455da88fc671
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: www.microsoft.com
+    reality-opts:
+      public-key: lyLhdojpACv6B3tHViJvPjNGATedXYRMnpAt4n4Siyo
+      short-id: f203719d3ff9a5f5
+  - name: "🇩🇪 Германия 2"
+    type: vless
+    server: a.nl.cdn.maviks.ru
+    port: 443
+    uuid: 793099c5-0712-4ea0-bbe1-455da88fc671
+    network: ws
+    tls: true
+    servername: cdn-de.maviks.ru
+    ws-opts:
+      path: "/pLmdwS3fSrE9WwdgE3LdG2?ed=2560"
+      headers:
+        Host: cdn-de.maviks.ru
+  - name: "🇩🇪 Германия 3"
+    type: vless
+    server: ge.connect-iskra.ru
+    port: 443
+    uuid: 244812cb-d141-4b92-b019-e59636fd2afb
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: fastsync.xyz
+    reality-opts:
+      public-key: 6Xwz_6U70TOIPsDK7VFJhh2bA-rlu-Nh-DeYLhmxzTQ
+      short-id: a2068df8ba7aed7a
+  - name: "🇭🇰 Гонконг 1"
+    type: vless
+    server: hkg.tunnelguard.ru
+    port: 443
+    uuid: 77fdad21-a138-47b5-8a53-547536125084
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: apple.com
+    reality-opts:
+      public-key: 5fe3x1eYr-oGKvnynwIlCfqbBdZGpGXWWbmAoERlcQs
+      short-id: e024d56a01cd
+  - name: "🇭🇰 Гонконг 2"
+    type: vless
+    server: hkg.tunnelguard.ru
+    port: 443
+    uuid: 46e274b0-8033-4011-b1a0-9d05c3531a79
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: apple.com
+    reality-opts:
+      public-key: 5fe3x1eYr-oGKvnynwIlCfqbBdZGpGXWWbmAoERlcQs
+      short-id: e024d56a01cd
+  - name: "🇰🇿 Казахстан 1"
+    type: vless
+    server: kz.connect-iskra.ru
+    port: 443
+    uuid: 244812cb-d141-4b92-b019-e59636fd2afb
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: softpipe.xyz
+    reality-opts:
+      public-key: 8VKPutEgZOD-XpqMamtP1NAq_Vkzs9_PVCPzIfkPhA0
+      short-id: 3c0f3356519e387a
+  - name: "🇱🇻 Латвия 1"
+    type: vless
+    server: lvd.tunnelguard.ru
+    port: 443
+    uuid: 160f867c-abdb-442c-85ea-9687cfd8086c
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: apple.com
+    reality-opts:
+      public-key: JAbD2CHBlANcIw5KyFshv2W1BmDCgymAumlZkuvdRUE
+      short-id: 1e4ff7698500
+  - name: "🇱🇻 Латвия 2"
+    type: vless
+    server: lv.iskra-connect.xyz
+    port: 443
+    uuid: 244812cb-d141-4b92-b019-e59636fd2afb
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: mediarush.xyz
+    reality-opts:
+      public-key: Rq6Wvhf48p0Uc5y4CWjFDv_QaJjkzD6Sfr0MFFvknE8
+      short-id: 953f07d3e2166255
+  - name: "📱 Мобильная связь 1"
+    type: vless
+    server: 45.134.12.185
+    port: 443
+    uuid: 302e74d8-0d06-4635-bf28-a8ef5d44bac1
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: music.yandex.ru
+    reality-opts:
+      public-key: RcnxFVirnpLv3hv6irUrs5wYlWUuhLx6x2kva2CqZi4
+      short-id: 6dbf1f0dc7
+  - name: "📱 Мобильная связь 2"
+    type: vless
+    server: 217.182.77.28
+    port: 443
+    uuid: 244812cb-d141-4b92-b019-e59636fd2afb
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: sun6-22.userapi.com
+    reality-opts:
+      public-key: gRB2LUzYmC2betrVUtMxPgrpraJY__bH1kF_afft_Tk
+      short-id: bf727b6450b26723
+  - name: "📱 Мобильная связь 3"
+    type: vless
+    server: wl2.connect-iskra.ru
+    port: 443
+    uuid: 244812cb-d141-4b92-b019-e59636fd2afb
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: smartcaptcha.yandexcloud.net
+    reality-opts:
+      public-key: HDO7aDiZk-gNKhdgA-50dBnLTJ_7QYcoCQo3-KeWDRA
+      short-id: c59f31debddf61fc
+  - name: "📱 Мобильная связь 4"
+    type: vless
+    server: wl1.connect-iskra.ru
+    port: 443
+    uuid: 244812cb-d141-4b92-b019-e59636fd2afb
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: eh.vk.com
+    reality-opts:
+      public-key: ZO899qaKEicyJ6SIDe06c_590Tvq0Cc_D-rZ6ihKzl4
+      short-id: 40544906b5c4603d
+  - name: "📱 Мобильная связь 5"
+    type: vless
+    server: rba.tunnelguard.ru
+    port: 443
+    uuid: ebbaf4ad-0645-42af-b55b-dde619874c2b
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: music.yandex.ru
+    reality-opts:
+      public-key: RcnxFVirnpLv3hv6irUrs5wYlWUuhLx6x2kva2CqZi4
+      short-id: 6dbf1f0dc7
+  - name: "🇳🇱 Нидерланды 1"
+    type: vless
+    server: nlb.tunnelguard.ru
+    port: 443
+    uuid: bf0b6d53-b30b-4afd-8b0e-9a657b214a29
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: apple.com
+    reality-opts:
+      public-key: YL1GrBvJqyrxCIdT-7JrT_TFg-e6gFeNwvF5fSJEKG8
+      short-id: da42fe66d2
+  - name: "🇳🇱 Нидерланды 2"
+    type: vless
+    server: nla.tunnelguard.ru
+    port: 443
+    uuid: e74dc1a5-7d48-400b-93c6-efb860b706fa
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: www.apple.com
+    reality-opts:
+      public-key: a4gPmr_etyEI2hYnYLiBI1aARcnmbc5DC3E8bVsImV8
+      short-id: 9129d92223
+  - name: "🇳🇱 Нидерланды 3"
+    type: vless
+    server: v217579.hosted-by-vdsina.com
+    port: 443
+    uuid: TrueVPN_3695817
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: www.whatsapp.com
+    reality-opts:
+      public-key: giARHMeYbJfnjHmHByIwjWX44oyro58vLJPv6gaqbxY
+      short-id: ffffffff
+  - name: "🇵🇱 Польша 1"
+    type: vless
+    server: pla.tunnelguard.ru
+    port: 443
+    uuid: 57616d51-c506-4545-9df7-12a9e72f03b0
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: www.apple.com
+    reality-opts:
+      public-key: bY1xoiS6-pCjea9KBwzgdXboiJqeUtaCpElHGzjLHCE
+      short-id: a1e5876211
+  - name: "🇵🇱 Польша 2"
+    type: vless
+    server: pla.tunnelguard.ru
+    port: 443
+    uuid: 57616d51-c506-4545-9df7-12a9e72f03b0
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: www.apple.com
+    reality-opts:
+      public-key: bY1xoiS6-pCjea9KBwzgdXboiJqeUtaCpElHGzjLHCE
+      short-id: a1e5876211
+  - name: "🇵🇱 Польша 3"
+    type: vless
+    server: univovh.iskra-connect.xyz
+    port: 443
+    uuid: 244812cb-d141-4b92-b019-e59636fd2afb
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: powodzenia.xyz
+    reality-opts:
+      public-key: _u-6IhXt7uYnQJmgM-kK40q8zZrwZg-CFp31MWzhJTA
+      short-id: 57fa862a5eaf5fef
+  - name: "🇵🇱 Польша 4"
+    type: vless
+    server: pla.tunnelguard.ru
+    port: 443
+    uuid: 639c4b87-5338-4665-99f7-1bf9b0ebfc76
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: www.apple.com
+    reality-opts:
+      public-key: bY1xoiS6-pCjea9KBwzgdXboiJqeUtaCpElHGzjLHCE
+      short-id: a1e5876211
+  - name: "🇷🇺 Россия 1"
+    type: vless
+    server: a.ru.maviks.ru
+    port: 443
+    uuid: 793099c5-0712-4ea0-bbe1-455da88fc671
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: maviks.ru
+    reality-opts:
+      public-key: cGzNRbN_zruI3CVTDukB2nOqWWEj7kgkay24f2fdLmQ
+      short-id: 0f917152a871e9c0
+  - name: "⚡️ Скоростной 1"
+    type: vless
+    server: nl.iskra-connect.xyz
+    port: 443
+    uuid: 244812cb-d141-4b92-b019-e59636fd2afb
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: cloudlane.xyz
+    reality-opts:
+      public-key: b46-XOvKuFVg6gyU1c7bVrxx5y24blnFHWPl0CCDNx8
+      short-id: 6a8f44cd52f26715
+  - name: "⚙️ Универсальный 1"
+    type: vless
+    server: sps1.sbs
+    port: 8443
+    uuid: f47ed595-7773-47f3-a6eb-8fb968f05b3c
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: safari
+    servername: dropbox.com
+    reality-opts:
+      public-key: SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc
+      short-id: ""
+  - name: "⚙️ Универсальный 2"
+    type: vless
+    server: ge.connect-iskra.ru
+    port: 443
+    uuid: 244812cb-d141-4b92-b019-e59636fd2afb
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: fastsync.xyz
+    reality-opts:
+      public-key: 6Xwz_6U70TOIPsDK7VFJhh2bA-rlu-Nh-DeYLhmxzTQ
+      short-id: a2068df8ba7aed7a
+  - name: "⚙️ Универсальный 3"
+    type: vless
+    server: molniya-6.molniya-api.com
+    port: 8443
+    uuid: c334cb53-df97-490e-87db-548930a795ee
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: www.googletagmanager.com
+    reality-opts:
+      public-key: 3vMMeupUgsZ5A8EIHmGYgW9_2LTiUyNOnqKy2xMiXTI
+      short-id: "9864"
+  - name: "🇫🇮 Хельсинки 1"
+    type: vless
+    server: hlc.tunnelguard.ru
+    port: 443
+    uuid: cdc4dd98-eda2-4528-a56d-1a76e0c4c5ea
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: apple.com
+    reality-opts:
+      public-key: 9wphlVpXuu6Rb9lcCZmsZzMcFICN-eTyl5FRc_1qx2g
+      short-id: a6d753c014
+  - name: "🇫🇮 Хельсинки 2"
+    type: vless
+    server: hla.tunnelguard.ru
+    port: 443
+    uuid: c0dd5265-1a93-4a37-beb8-e97c7af4ca69
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: www.apple.com
+    reality-opts:
+      public-key: b7CqCVrxUMKTMGYcBcoq7sO5ihJUl9Qmr33niI8xlTM
+      short-id: 8fc3796a7bdb1e
+  - name: "▶️ YouTube 1"
+    type: vless
+    server: yt.connect-iskra.ru
+    port: 443
+    uuid: 244812cb-d141-4b92-b019-e59636fd2afb
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: shiftline.xyz
+    reality-opts:
+      public-key: 9vV8MOvj1UAEXRcvy7BOFCeYSlsC9RJtNBm7Oun0tic
+      short-id: 0277c306ebdaa58f
+  - name: "🇫🇮✨Финляндия ⚡️"
+    type: vless
+    server: fl.connect-iskra.ru
+    port: 443
+    uuid: 244812cb-d141-4b92-b019-e59636fd2afb
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: edgeport.xyz
+    reality-opts:
+      public-key: M7wkwiwOGcTVgwnC7P8NcdcTFwD171haZllYZtaqBUA
+      short-id: 2c21bb51663b5e45
+  - name: "🟢 Для звонков ☎️"
+    type: vless
+    server: fl.connect-iskra.ru
+    port: 443
+    uuid: 244812cb-d141-4b92-b019-e59636fd2afb
+    network: tcp
+    tls: true
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    servername: edgeport.xyz
+    reality-opts:
+      public-key: M7wkwiwOGcTVgwnC7P8NcdcTFwD171haZllYZtaqBUA
+      short-id: 2c21bb51663b5e45
+
+proxy-groups:
+  - name: "📲 Proxy"
+    type: select
+    proxies:
+      - ♻️ Auto
+      - 🚨 Fallback
+      
+      - 🇺🇸 Америка
+      - 🇳🇱 Нидерланды
+      - 🇩🇪 Германия
+      - 🇵🇱 Польша
+      - 🇫🇮 Финляндия
+      - 🇭🇰 Гонконг
+      - 🇱🇻 Латвия
+      - 🇰🇿 Казахстан
+      - 🇷🇺 Россия
+
+      - 🛡️ Антиблок
+      - 📱 Мобильная связь
+      - ⚙️ Универсальные
+      - ▶️ YouTube
+      - 📞 Для звонков
+      
+      - "🇺🇸 Америка 1"
+      - "🇺🇸 Америка 2"
+      - "🇺🇸 Америка 3"
+      - "🇳🇱 Амстердам 1"
+      - "🇳🇱 Амстердам 2"
+      - "🇳🇱 Нидерланды 1"
+      - "🇳🇱 Нидерланды 2"
+      - "🇳🇱 Нидерланды 3"
+      - "🇩🇪 Германия 1"
+      - "🇩🇪 Германия 2"
+      - "🇩🇪 Германия 3"
+      - "🇵🇱 Польша 1"
+      - "🇵🇱 Польша 2"
+      - "🇵🇱 Польша 3"
+      - "🇵🇱 Польша 4"
+      - "🇫🇮 Хельсинки 1"
+      - "🇫🇮 Хельсинки 2"
+      - "🇫🇮✨Финляндия ⚡️"
+      - "🇭🇰 Гонконг 1"
+      - "🇭🇰 Гонконг 2"
+      - "🇱🇻 Латвия 1"
+      - "🇱🇻 Латвия 2"
+      - "🇰🇿 Казахстан 1"
+      - "🇷🇺 Россия 1"
+      - "🛡️ Антиблок 1"
+      - "🛡️ Антиблок 2"
+      - "📱 Мобильная связь 1"
+      - "📱 Мобильная связь 2"
+      - "📱 Мобильная связь 3"
+      - "📱 Мобильная связь 4"
+      - "📱 Мобильная связь 5"
+      - "⚙️ Универсальный 1"
+      - "⚙️ Универсальный 2"
+      - "⚙️ Универсальный 3"
+      - "🌀 Автоподбор 1"
+      - "⚡️ Скоростной 1"
+      - "▶️ YouTube 1"
+      - "🟢 Для звонков ☎️"
+
+  - name: "♻️ Auto"
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    proxies:
+      - "🇺🇸 Америка 1"
+      - "🇺🇸 Америка 2"
+      - "🇳🇱 Амстердам 1"
+      - "🇳🇱 Амстердам 2"
+      - "🇩🇪 Германия 1"
+      - "🇩🇪 Германия 2"
+      - "🇵🇱 Польша 1"
+      - "🇵🇱 Польша 2"
+      - "🇫🇮 Хельсинки 1"
+      - "🇫🇮✨Финляндия ⚡️"
+      - "⚙️ Универсальный 1"
+      - "⚡️ Скоростной 1"
+
+  - name: "🚨 Fallback"
+    type: fallback
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    proxies:
+      - "🇺🇸 Америка 1"
+      - "🇩🇪 Германия 1"
+      - "🇳🇱 Нидерланды 1"
+      - "🇫🇮 Хельсинки 1"
+      - "⚙️ Универсальный 2"
+
+  - name: "🇺🇸 Америка"
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    proxies:
+      - "🇺🇸 Америка 1"
+      - "🇺🇸 Америка 2"
+      - "🇺🇸 Америка 3"
+
+  - name: "🇳🇱 Нидерланды"
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    proxies:
+      - "🇳🇱 Амстердам 1"
+      - "🇳🇱 Амстердам 2"
+      - "🇳🇱 Нидерланды 1"
+      - "🇳🇱 Нидерланды 2"
+      - "🇳🇱 Нидерланды 3"
+
+  - name: "🇩🇪 Германия"
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    proxies:
+      - "🇩🇪 Германия 1"
+      - "🇩🇪 Германия 2"
+      - "🇩🇪 Германия 3"
+
+  - name: "🇵🇱 Польша"
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    proxies:
+      - "🇵🇱 Польша 1"
+      - "🇵🇱 Польша 2"
+      - "🇵🇱 Польша 3"
+      - "🇵🇱 Польша 4"
+
+  - name: "🇫🇮 Финляндия"
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    proxies:
+      - "🇫🇮 Хельсинки 1"
+      - "🇫🇮 Хельсинки 2"
+      - "🇫🇮✨Финляндия ⚡️"
+
+  - name: "🇭🇰 Гонконг"
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    proxies:
+      - "🇭🇰 Гонконг 1"
+      - "🇭🇰 Гонконг 2"
+
+  - name: "🇱🇻 Латвия"
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    proxies:
+      - "🇱🇻 Латвия 1"
+      - "🇱🇻 Латвия 2"
+      
+  - name: "🇰🇿 Казахстан"
+    type: select 
+    proxies:
+      - "🇰🇿 Казахстан 1"
+
+  - name: "🇷🇺 Россия"
+    type: select 
+    proxies:
+      - "🇷🇺 Россия 1"
+
+  - name: "🛡️ Антиблок"
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    proxies:
+      - "🛡️ Антиблок 1"
+      - "🛡️ Антиблок 2"
+
+  - name: "📱 Мобильная связь"
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    proxies:
+      - "📱 Мобильная связь 1"
+      - "📱 Мобильная связь 2"
+      - "📱 Мобильная связь 3"
+      - "📱 Мобильная связь 4"
+      - "📱 Мобильная связь 5"
+
+  - name: "⚙️ Универсальные"
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    proxies:
+      - "⚙️ Универсальный 1"
+      - "⚙️ Универсальный 2"
+      - "⚙️ Универсальный 3"
+      - "🌀 Автоподбор 1"
+      - "⚡️ Скоростной 1"
+
+  - name: "▶️ YouTube"
+    type: select
+    proxies:
+      - "▶️ YouTube 1"
+
+  - name: "📞 Для звонков"
+    type: select 
+    proxies:
+      - "🟢 Для звонков ☎️"
+
+rules:
+  - MATCH,📲 Proxy

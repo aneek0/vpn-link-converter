@@ -8,6 +8,32 @@ def get_format_keyboard() -> InlineKeyboardMarkup:
         inline_keyboard=[
             [
                 InlineKeyboardButton(
+                    text="⚡ Clash YAML",
+                    callback_data="format:clash"
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    text="🚀 Xray Core",
+                    callback_data="format:xray"
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    text="📦 sing-box",
+                    callback_data="format:singbox"
+                ),
+            ],
+        ]
+    )
+
+
+def get_singbox_format_keyboard() -> InlineKeyboardMarkup:
+    """Клавиатура для выбора типа конфигурации sing-box"""
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
                     text="📄 Полная конфигурация",
                     callback_data="format:full"
                 ),
@@ -16,12 +42,6 @@ def get_format_keyboard() -> InlineKeyboardMarkup:
                 InlineKeyboardButton(
                     text="📦 Только outbound",
                     callback_data="format:outbound"
-                ),
-            ],
-            [
-                InlineKeyboardButton(
-                    text="⚡ Clash YAML",
-                    callback_data="format:clash"
                 ),
             ],
         ]

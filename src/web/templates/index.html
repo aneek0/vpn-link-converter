@@ -203,7 +203,8 @@
             
             <div class="form-group">
                 <label>Формат конфигурации:</label>
-                <div class="radio-group">
+                <div class="radio-group" id="format-group">
+                    <!-- Форматы будут динамически обновляться через JavaScript -->
                     {% if subscription_links %}
                     <!-- Форматы для подписок -->
                     <div class="radio-option">
@@ -246,28 +247,47 @@
                         >
                         <label for="xray">🚀 Xray Core</label>
                     </div>
+                    {% elif show_subscription_formats %}
+                    <!-- Форматы для подписок (при первой отправке) -->
+                    <div class="radio-option">
+                        <input 
+                            type="radio" 
+                            id="text" 
+                            name="format_type" 
+                            value="text"
+                        >
+                        <label for="text">📝 Текстовый файл</label>
+                    </div>
+                    <div class="radio-option">
+                        <input 
+                            type="radio" 
+                            id="clash" 
+                            name="format_type" 
+                            value="clash"
+                            checked
+                        >
+                        <label for="clash">⚡ Clash YAML</label>
+                    </div>
+                    <div class="radio-option">
+                        <input 
+                            type="radio" 
+                            id="singbox" 
+                            name="format_type" 
+                            value="singbox"
+                        >
+                        <label for="singbox">📦 sing-box JSON</label>
+                    </div>
+                    <div class="radio-option">
+                        <input 
+                            type="radio" 
+                            id="xray" 
+                            name="format_type" 
+                            value="xray"
+                        >
+                        <label for="xray">🚀 Xray Core</label>
+                    </div>
                     {% else %}
                     <!-- Форматы для одиночных ссылок -->
-                    <div class="radio-option">
-                        <input 
-                            type="radio" 
-                            id="outbound" 
-                            name="format_type" 
-                            value="outbound"
-                            {% if format_type != "full" and format_type != "clash" %}checked{% endif %}
-                        >
-                        <label for="outbound">📦 Только outbound</label>
-                    </div>
-                    <div class="radio-option">
-                        <input 
-                            type="radio" 
-                            id="full" 
-                            name="format_type" 
-                            value="full"
-                            {% if format_type == "full" %}checked{% endif %}
-                        >
-                        <label for="full">📄 Полная конфигурация</label>
-                    </div>
                     <div class="radio-option">
                         <input 
                             type="radio" 
@@ -277,6 +297,48 @@
                             {% if format_type == "clash" %}checked{% endif %}
                         >
                         <label for="clash">⚡ Clash YAML</label>
+                    </div>
+                    <div class="radio-option">
+                        <input 
+                            type="radio" 
+                            id="xray" 
+                            name="format_type" 
+                            value="xray"
+                            {% if format_type == "xray" %}checked{% endif %}
+                        >
+                        <label for="xray">🚀 Xray Core</label>
+                    </div>
+                    <div class="radio-option" id="singbox-option">
+                        <input 
+                            type="radio" 
+                            id="singbox" 
+                            name="format_type" 
+                            value="singbox"
+                            {% if format_type == "singbox" %}checked{% endif %}
+                        >
+                        <label for="singbox">📦 sing-box</label>
+                    </div>
+                    <div id="singbox-suboptions" style="display: {% if format_type == 'full' or format_type == 'outbound' %}block{% else %}none{% endif %}; margin-left: 20px; margin-top: 10px;">
+                        <div class="radio-option">
+                            <input 
+                                type="radio" 
+                                id="full" 
+                                name="format_type" 
+                                value="full"
+                                {% if format_type == "full" %}checked{% endif %}
+                            >
+                            <label for="full">📄 Полная конфигурация</label>
+                        </div>
+                        <div class="radio-option">
+                            <input 
+                                type="radio" 
+                                id="outbound" 
+                                name="format_type" 
+                                value="outbound"
+                                {% if format_type == "outbound" %}checked{% endif %}
+                            >
+                            <label for="outbound">📦 Только outbound</label>
+                        </div>
                     </div>
                     {% endif %}
                 </div>
@@ -291,16 +353,9 @@
         </div>
         {% endif %}
         
-        {% if success and subscription_links %}
+        {% if show_subscription_formats and not success %}
         <div class="result show">
-            <h2>✅ Извлечено {{ links_count }} VPN ссылок из подписки:</h2>
-            <div style="max-height: 400px; overflow-y: auto; background: #fff; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                {% for link in subscription_links %}
-                <div style="margin-bottom: 10px; padding: 10px; background: #f9f9f9; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 12px; word-break: break-all;">
-                    {{ link }}
-                </div>
-                {% endfor %}
-            </div>
+            <h2>✅ Извлечено {{ links_count }} VPN ссылок из подписки</h2>
             <p style="margin-top: 15px; color: #666;">
                 Выберите формат экспорта выше и нажмите "Конвертировать".
             </p>
@@ -311,7 +366,10 @@
         <div class="result show">
             <h2>✅ Результат конвертации:</h2>
             <textarea id="result" readonly>{{ config }}</textarea>
-            <button class="copy-btn" onclick="copyToClipboard()">📋 Копировать</button>
+            <div style="margin-top: 10px; display: flex; gap: 10px;">
+                <button class="copy-btn" onclick="copyToClipboard()">📋 Копировать</button>
+                <button class="copy-btn" onclick="downloadConfig()" style="background: #007bff;">💾 Скачать файл</button>
+            </div>
             {% if config_format == "yaml" %}
             <p style="margin-top: 10px; color: #666; font-size: 0.9em;">
                 Формат: Clash YAML{% if links_count %} ({{ links_count }} серверов){% endif %}
@@ -347,6 +405,208 @@
     </div>
     
     <script>
+        const urlInput = document.getElementById('url');
+        const formatGroup = document.getElementById('format-group');
+        
+        // Определение типа ссылки при вставке
+        urlInput.addEventListener('input', async function() {
+            const url = this.value.trim();
+            if (!url) {
+                updateFormatOptions('single');
+                return;
+            }
+            
+            // Проверяем локально на VPN протоколы
+            const vpnProtocols = ['hy2://', 'hysteria2://', 'vless://', 'vmess://', 'trojan://',
+                'ss://', 'shadowsocks://', 'socks5://', 'socks://',
+                'wg://', 'wireguard://', 'tuic://', 'hysteria://'];
+            const isVpnLink = vpnProtocols.some(proto => url.startsWith(proto));
+            
+            // Проверяем на HTTP/HTTPS (подписка)
+            const isHttpLink = url.startsWith('http://') || url.startsWith('https://');
+            
+            if (isHttpLink || (!isVpnLink && url.length > 20 && !url.includes(' '))) {
+                // Возможно подписка - проверяем через API
+                try {
+                    const formData = new FormData();
+                    formData.append('url', url);
+                    const response = await fetch('/api/detect-type', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await response.json();
+                    
+                    if (data.is_subscription) {
+                        updateFormatOptions('subscription');
+                    } else if (data.is_vpn_link) {
+                        updateFormatOptions('single');
+                    } else {
+                        updateFormatOptions('single');
+                    }
+                } catch (e) {
+                    updateFormatOptions('single');
+                }
+            } else if (isVpnLink) {
+                updateFormatOptions('single');
+            } else {
+                updateFormatOptions('single');
+            }
+        });
+        
+        function updateFormatOptions(type) {
+            if (type === 'subscription') {
+                formatGroup.innerHTML = `
+                    <div class="radio-option">
+                        <input type="radio" id="text" name="format_type" value="text">
+                        <label for="text">📝 Текстовый файл</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="clash" name="format_type" value="clash" checked>
+                        <label for="clash">⚡ Clash YAML</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="singbox" name="format_type" value="singbox">
+                        <label for="singbox">📦 sing-box JSON</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="xray" name="format_type" value="xray">
+                        <label for="xray">🚀 Xray Core</label>
+                    </div>
+                `;
+            } else {
+                formatGroup.innerHTML = `
+                    <div class="radio-option">
+                        <input type="radio" id="clash" name="format_type" value="clash" checked>
+                        <label for="clash">⚡ Clash YAML</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="xray" name="format_type" value="xray">
+                        <label for="xray">🚀 Xray Core</label>
+                    </div>
+                    <div class="radio-option" id="singbox-option">
+                        <input type="radio" id="singbox" name="format_type" value="singbox">
+                        <label for="singbox">📦 sing-box</label>
+                    </div>
+                    <div id="singbox-suboptions" style="display: none; margin-left: 20px; margin-top: 10px;">
+                        <div class="radio-option">
+                            <input type="radio" id="full" name="format_type" value="full">
+                            <label for="full">📄 Полная конфигурация</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="outbound" name="format_type" value="outbound" checked>
+                            <label for="outbound">📦 Только outbound</label>
+                        </div>
+                    </div>
+                `;
+                
+                // Добавляем обработчики для sing-box и других форматов
+                setTimeout(() => {
+                    setupSingboxHandlers();
+                    // Скрываем опции full/outbound при выборе других форматов
+                    const clashRadio = document.getElementById('clash');
+                    const xrayRadio = document.getElementById('xray');
+                    const singboxSuboptions = document.getElementById('singbox-suboptions');
+                    
+                    if (clashRadio && singboxSuboptions) {
+                        clashRadio.addEventListener('change', function() {
+                            if (this.checked) {
+                                singboxSuboptions.style.display = 'none';
+                            }
+                        });
+                    }
+                    if (xrayRadio && singboxSuboptions) {
+                        xrayRadio.addEventListener('change', function() {
+                            if (this.checked) {
+                                singboxSuboptions.style.display = 'none';
+                            }
+                        });
+                    }
+                }, 100);
+            }
+        }
+        
+        function setupSingboxHandlers() {
+            const singboxRadio = document.getElementById('singbox');
+            const singboxSuboptions = document.getElementById('singbox-suboptions');
+            if (!singboxSuboptions) return;
+            
+            // Проверяем, выбран ли уже sing-box, full или outbound
+            const currentFormat = document.querySelector('input[name="format_type"]:checked')?.value;
+            if (currentFormat === 'singbox' || currentFormat === 'full' || currentFormat === 'outbound') {
+                singboxSuboptions.style.display = 'block';
+            } else {
+                singboxSuboptions.style.display = 'none';
+            }
+            
+            // Обработчик для sing-box
+            if (singboxRadio) {
+                singboxRadio.addEventListener('change', function() {
+                    if (this.checked) {
+                        // Показываем опции full/outbound рядом
+                        singboxSuboptions.style.display = 'block';
+                        // Снимаем выбор с full/outbound
+                        const fullRadio = document.getElementById('full');
+                        const outboundRadio = document.getElementById('outbound');
+                        if (fullRadio) fullRadio.checked = false;
+                        if (outboundRadio) outboundRadio.checked = false;
+                    } else {
+                        // Если ни full, ни outbound не выбраны, скрываем опции
+                        const fullRadio = document.getElementById('full');
+                        const outboundRadio = document.getElementById('outbound');
+                        if (fullRadio && !fullRadio.checked && outboundRadio && !outboundRadio.checked) {
+                            singboxSuboptions.style.display = 'none';
+                        }
+                    }
+                });
+            }
+            
+            // Обработчики для full/outbound
+            const fullRadio = document.getElementById('full');
+            const outboundRadio = document.getElementById('outbound');
+            if (fullRadio) {
+                fullRadio.addEventListener('change', function() {
+                    if (this.checked) {
+                        if (singboxRadio) singboxRadio.checked = false;
+                        singboxSuboptions.style.display = 'block';
+                    }
+                });
+            }
+            if (outboundRadio) {
+                outboundRadio.addEventListener('change', function() {
+                    if (this.checked) {
+                        if (singboxRadio) singboxRadio.checked = false;
+                        singboxSuboptions.style.display = 'block';
+                    }
+                });
+            }
+            
+            // Скрываем опции full/outbound при выборе других форматов
+            const clashRadio = document.getElementById('clash');
+            const xrayRadio = document.getElementById('xray');
+            
+            if (clashRadio) {
+                clashRadio.addEventListener('change', function() {
+                    if (this.checked) {
+                        singboxSuboptions.style.display = 'none';
+                    }
+                });
+            }
+            if (xrayRadio) {
+                xrayRadio.addEventListener('change', function() {
+                    if (this.checked) {
+                        singboxSuboptions.style.display = 'none';
+                    }
+                });
+            }
+        }
+        
+        // Инициализация при загрузке страницы
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setupSingboxHandlers);
+        } else {
+            setupSingboxHandlers();
+        }
+        
         function copyToClipboard() {
             const textarea = document.getElementById('result');
             textarea.select();
@@ -361,6 +621,31 @@
                 btn.textContent = originalText;
                 btn.style.background = '#28a745';
             }, 2000);
+        }
+        
+        function downloadConfig() {
+            const url = urlInput.value.trim();
+            const formatType = document.querySelector('input[name="format_type"]:checked')?.value;
+            
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/api/download';
+            
+            const urlField = document.createElement('input');
+            urlField.type = 'hidden';
+            urlField.name = 'url';
+            urlField.value = url;
+            
+            const formatField = document.createElement('input');
+            formatField.type = 'hidden';
+            formatField.name = 'format_type';
+            formatField.value = formatType;
+            
+            form.appendChild(urlField);
+            form.appendChild(formatField);
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
         }
     </script>
 </body>

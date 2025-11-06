@@ -10,7 +10,7 @@ from ..converter.clash import convert_to_clash, convert_multiple_to_clash, forma
 from ..converter.xray import convert_multiple_to_xray, format_json as format_xray_json
 from ..converter.parser import VPNLinkParser
 from ..converter.subscription import is_subscription_url, download_subscription, extract_vpn_links
-from .keyboards import get_format_keyboard, get_subscription_format_keyboard
+from .keyboards import get_format_keyboard, get_subscription_format_keyboard, get_singbox_format_keyboard
 from urllib.parse import urlparse
 
 logger = logging.getLogger(__name__)
@@ -366,60 +366,76 @@ async def handle_format_choice(callback: CallbackQuery) -> None:
     user_id = callback.from_user.id
     format_type = callback.data.split(":")[1]
     
+    # Обработка одиночной ссылки (подписки обрабатываются отдельным обработчиком)
+    if user_id not in user_links:
+        await callback.message.answer("❌ Ссылка не найдена. Отправь ссылку заново.")
+        return
+    
+    vpn_link = user_links[user_id]
+    
+    # Если выбран sing-box, показываем подменю для выбора full/outbound
+    if format_type == "singbox":
+        await callback.message.answer(
+            "📦 Выбери тип конфигурации sing-box:",
+            reply_markup=get_singbox_format_keyboard()
+        )
+        return
+    
+    # Для остальных форматов сразу конвертируем
     try:
         from aiogram.types import BufferedInputFile
         
-        # Обработка одиночной ссылки (подписки обрабатываются отдельным обработчиком)
-        if user_id not in user_links:
-            await callback.message.answer("❌ Ссылка не найдена. Отправь ссылку заново.")
-            return
-        
-        vpn_link = user_links[user_id]
         del user_links[user_id]
         
         if format_type == "clash":
             # Конвертация в Clash YAML
+            await callback.message.answer("🔄 Конвертирую в Clash YAML...")
             config = convert_to_clash(vpn_link)
             yaml_config = format_yaml(config)
             
-            # Отправляем результат
-            if len(yaml_config) > 4096:
-                file = BufferedInputFile(
-                    yaml_config.encode('utf-8'),
-                    filename='clash-config.yaml'
-                )
-                await callback.message.answer_document(
-                    file,
-                    caption="✅ Конфигурация Clash YAML"
-                )
-            else:
-                await callback.message.answer(
-                    "✅ Конфигурация Clash YAML:\n\n"
-                    f"```yaml\n{yaml_config}\n```",
-                    parse_mode="Markdown"
-                )
-        else:
-            # Конвертация в sing-box
+            filename = 'clash-config.yaml'
+            file = BufferedInputFile(
+                yaml_config.encode('utf-8'),
+                filename=filename
+            )
+            await callback.message.answer_document(
+                file,
+                caption="✅ Конфигурация Clash YAML"
+            )
+        
+        elif format_type == "xray":
+            # Конвертация в Xray Core
+            await callback.message.answer("🔄 Конвертирую в Xray Core...")
+            config = convert_multiple_to_xray([vpn_link])
+            json_config = format_xray_json(config)
+            
+            filename = 'xray-config.json'
+            file = BufferedInputFile(
+                json_config.encode('utf-8'),
+                filename=filename
+            )
+            await callback.message.answer_document(
+                file,
+                caption="✅ Конфигурация Xray Core"
+            )
+        
+        elif format_type == "full" or format_type == "outbound":
+            # Конвертация в sing-box (full или outbound)
+            await callback.message.answer("🔄 Конвертирую в sing-box JSON...")
             full_config = format_type == "full"
             config = convert_to_singbox(vpn_link, full_config=full_config)
             json_config = format_json(config)
             
-            # Отправляем результат
-            if len(json_config) > 4096:
-                file = BufferedInputFile(
-                    json_config.encode('utf-8'),
-                    filename='sing-box-config.json'
-                )
-                await callback.message.answer_document(
-                    file,
-                    caption=f"✅ Конфигурация ({'полная' if full_config else 'только outbound'})"
-                )
-            else:
-                await callback.message.answer(
-                    f"✅ Конфигурация ({'полная' if full_config else 'только outbound'}):\n\n"
-                    f"```json\n{json_config}\n```",
-                    parse_mode="Markdown"
-                )
+            filename = 'sing-box-config.json' if full_config else 'sing-box-outbound.json'
+            file = BufferedInputFile(
+                json_config.encode('utf-8'),
+                filename=filename
+            )
+            await callback.message.answer_document(
+                file,
+                caption=f"✅ Конфигурация sing-box ({'полная' if full_config else 'только outbound'})"
+            )
+        
     except Exception as e:
         logger.error(f"Ошибка при конвертации: {e}", exc_info=True)
         await callback.message.answer(
